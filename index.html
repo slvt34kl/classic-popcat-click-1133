@@ -58,7 +58,6 @@
       font-size: 80px;
       font-weight: 900;
       -webkit-text-stroke: 3px black;
-
     }
 
     /* 4. 貓咪狀態 */
@@ -68,15 +67,103 @@
     #op {
       background-image: url("imgs/op.png");
     }
+
+    /* 計數器顯示 */
+    #counter-text {
+      font-size: 80px; /* 與圖片字體大小相同 */
+      font-weight: 900;
+      -webkit-text-stroke: 3px black;
+      color: white;
+    }
+
   </style>
 </head>
 
 <body>
-<div  class="container">
+<div class="container">
   <img class="title" src="imgs/popcat.svg" alt="POPCAT">
-  <div class="cat-img" id="p">0202</div>
+
+  <!-- 貓咪圖片區域 -->
+  <div class="cat-img" id="p">
+    <span id="counter-text">0202</span> <!-- 顯示數字 -->
+  </div>
 </div>
 
+<script>
+  // 取得 HTML 元素
+  const counterText = document.getElementById('counter-text');
+  const catImage = document.getElementById('p');
+
+  // 初始化計數器數值
+  let count = 202;
+
+  // 更新顯示的數字，讓它包含前綴的零
+  function updateCounter() {
+    const updatedCount = (count).toString().padStart(4, '0'); // 確保是四位數
+    counterText.textContent = updatedCount; // 更新顯示的數字
+  }
+
+  // 音樂檔案陣列
+  const audioFiles = [
+    new Audio('audio/pop1.mp3'),
+    new Audio('audio/pop2.mp3'),
+    new Audio('audio/pop3.mp3'),
+    new Audio('audio/pop4.mp3')
+  ];
+
+  // 目前播放的音樂索引
+  let currentAudioIndex = 0;
+
+  // 播放音樂
+  function playAudio() {
+    // 播放當前音樂
+    audioFiles[currentAudioIndex].play();
+    audioFiles[currentAudioIndex].loop = true; // 設定音樂循環播放
+  }
+
+  // 每次按下滑鼠，更新計數器並切換音樂
+  catImage.addEventListener('click', function() {
+    count++; // 計數器累加
+    updateCounter(); // 更新顯示的數值
+
+    // 切換音樂
+    currentAudioIndex = (currentAudioIndex + 1) % audioFiles.length; // 使音樂循環
+    playAudio(); // 播放音樂
+
+    // 顯示開嘴圖片
+    catImage.style.backgroundImage = "url('imgs/op.png')";
+  });
+
+  // 當滑鼠放開時，延遲 25 毫秒後切回閉嘴圖片
+  catImage.addEventListener('mouseup', function() {
+    setTimeout(function() {
+      catImage.style.backgroundImage = "url('imgs/p.png')"; // 切換回閉嘴圖片
+    }, 25); // 延遲 25 毫秒
+  });
+
+  // 當按下鍵盤上的某個按鍵時，計數器累加
+  window.addEventListener('keydown', function(event) {
+    // 如果按下的是空白鍵（Spacebar）或 Enter 鍵
+    if (event.key === ' ' || event.key === 'Enter') {
+      count++; // 計數器累加
+      updateCounter(); // 更新顯示的數值
+
+      // 切換音樂
+      currentAudioIndex = (currentAudioIndex + 1) % audioFiles.length; // 使音樂循環
+      playAudio(); // 播放音樂
+
+      // 顯示開嘴圖片
+      catImage.style.backgroundImage = "url('imgs/op.png')";
+    }
+  });
+
+  // 當鍵盤按鍵放開時，延遲 25 毫秒後切回閉嘴圖片
+  window.addEventListener('keyup', function() {
+    setTimeout(function() {
+      catImage.style.backgroundImage = "url('imgs/p.png')"; // 切換回閉嘴圖片
+    }, 25); // 延遲 25 毫秒
+  });
+</script>
 
 </body>
 </html>
